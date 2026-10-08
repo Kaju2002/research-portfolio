@@ -18,12 +18,12 @@ export default function ContactForm({ email }: { email: string }) {
   }
 
   const field =
-    "w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition placeholder:text-muted/70 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10";
+    "w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none transition placeholder:text-muted/70 focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/10";
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-3xl bg-white p-7 shadow-xl shadow-primary/5 ring-1 ring-border sm:p-9"
+      className="rounded-2xl bg-white p-7 shadow-sm ring-1 ring-border sm:p-9"
     >
       <h2 className="font-display text-2xl font-bold text-primary">Send us a message</h2>
       <p className="mt-2 text-sm text-muted">We usually reply within two working days.</p>
@@ -61,7 +61,7 @@ export default function ContactForm({ email }: { email: string }) {
 
       <button
         type="submit"
-        className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 hover:bg-primary-dark sm:w-auto"
+        className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-primary-dark sm:w-auto"
       >
         <Send className="h-4 w-4" />
         Send message

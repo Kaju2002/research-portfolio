@@ -73,9 +73,70 @@ body {
   color: transparent;
 }
 
+/* Intro: driven by CSS so it plays and exits even before JavaScript loads. */
+.intro {
+  animation: intro-curtain 0.7s cubic-bezier(0.76, 0, 0.24, 1) 2.4s forwards;
+}
+
+.intro[data-skip] {
+  animation: intro-curtain 0.45s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+html[data-intro-seen] .intro {
+  display: none;
+}
+
+.intro-in {
+  opacity: 0;
+  animation: intro-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) forwards;
+}
+
+.intro-line {
+  transform: translateY(110%);
+  animation: intro-line 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) forwards;
+}
+
+.intro-bar {
+  width: 0;
+  animation: intro-bar 1.8s cubic-bezier(0.65, 0, 0.35, 1) var(--d, 0s) forwards;
+}
+
+@keyframes intro-curtain {
+  to {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+}
+
+@keyframes intro-line {
+  to {
+    transform: none;
+  }
+}
+
+@keyframes intro-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes intro-bar {
+  to {
+    width: var(--w, 100%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .intro {
+    display: none !important;
   }
   *,
   *::before,

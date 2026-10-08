@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   experimental: {
     agentFeedback: true,
   },
+  env: {
+    BUILD_DATE: new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Colombo" }),
+  },
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

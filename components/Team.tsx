@@ -1,15 +1,6 @@
 import Image from "next/image";
-import { Mail } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
 import { members, supervisors, type Person } from "@/data/research";
-
-function LinkedInIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
-      <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z" />
-    </svg>
-  );
-}
 
 function initials(name: string) {
   return name
@@ -20,59 +11,98 @@ function initials(name: string) {
     .join("");
 }
 
-function Avatar({ person, size }: { person: Person; size: "lg" | "md" }) {
-  const dims = size === "lg" ? "h-28 w-28 text-3xl" : "h-24 w-24 text-2xl";
-  if (person.image) {
-    return (
-      <Image
-        src={person.image}
-        alt={person.name}
-        width={224}
-        height={224}
-        className={`${dims} rounded-full object-cover ring-4 ring-white shadow-lg`}
-      />
-    );
-  }
+function Photo({ person, sizes }: { person: Person; sizes: string }) {
   return (
-    <span
-      className={`${dims} grid place-items-center rounded-full bg-linear-to-br from-primary to-accent font-display font-bold text-white ring-4 ring-white shadow-lg`}
-    >
-      {initials(person.name)}
-    </span>
+    <div className="relative aspect-square overflow-hidden rounded-xl bg-primary-soft">
+      {person.image ? (
+        <Image src={person.image} alt={person.name} fill sizes={sizes} className="object-cover" />
+      ) : (
+        <span className="grid h-full place-items-center font-display text-4xl font-bold text-primary/30">
+          {initials(person.name)}
+        </span>
+      )}
+    </div>
   );
 }
 
-function PersonCard({ person, size }: { person: Person; size: "lg" | "md" }) {
+function Contact({ person }: { person: Person }) {
   return (
-    <article className="group flex flex-col items-center rounded-3xl bg-white p-8 text-center shadow-sm ring-1 ring-border transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10">
-      <Avatar person={person} size={size} />
-      <span className="mt-5 rounded-full bg-primary-light px-3 py-1 text-xs font-semibold text-primary">
-        {person.role}
-      </span>
-      <h3 className="mt-3 font-display text-lg font-bold text-primary">{person.name}</h3>
-      <p className="mt-1 text-sm text-muted">{person.title}</p>
-      {person.component && (
-        <p className="mt-3 text-xs font-medium text-accent">{person.component}</p>
-      )}
-      <div className="mt-5 flex gap-2">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+      <a
+        href={`mailto:${person.email}`}
+        className="font-medium text-primary underline-offset-4 hover:underline"
+      >
+        {person.email}
+      </a>
+      {person.linkedin && (
         <a
-          href={`mailto:${person.email}`}
-          aria-label={`Email ${person.name}`}
-          className="grid h-10 w-10 place-items-center rounded-full bg-primary-soft text-primary transition hover:bg-primary hover:text-white"
+          href={person.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-medium text-muted underline-offset-4 hover:text-primary hover:underline"
         >
-          <Mail className="h-4 w-4" />
+          LinkedIn
         </a>
-        {person.linkedin && (
-          <a
-            href={person.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${person.name} on LinkedIn`}
-            className="grid h-10 w-10 place-items-center rounded-full bg-primary-soft text-primary transition hover:bg-[#0a66c2] hover:text-white"
-          >
-            <LinkedInIcon className="h-4 w-4" />
-          </a>
+      )}
+    </div>
+  );
+}
+
+function RoleLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-xs font-semibold uppercase tracking-[0.15em] text-accent">{children}</p>
+  );
+}
+
+function SupervisorCard({ person }: { person: Person }) {
+  return (
+    <article className="grid gap-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-border sm:grid-cols-[9rem_1fr] sm:p-7">
+      <div className="w-36 sm:w-auto">
+        <Photo person={person} sizes="144px" />
+      </div>
+      <div className="flex flex-col">
+        <RoleLabel>{person.role}</RoleLabel>
+        <h3 className="mt-2 font-display text-xl font-bold text-primary">{person.name}</h3>
+        <p className="mt-1 text-sm font-medium text-foreground/80">{person.title}</p>
+        {person.department && <p className="text-sm text-muted">{person.department}</p>}
+
+        {person.interests && (
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {person.interests.map((i) => (
+              <span
+                key={i}
+                className="rounded-md border border-border px-2 py-0.5 text-xs font-medium text-foreground/70"
+              >
+                {i}
+              </span>
+            ))}
+          </div>
         )}
+
+        <div className="mt-auto pt-5">
+          <Contact person={person} />
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function MemberCard({ person }: { person: Person }) {
+  return (
+    <article className="flex flex-col rounded-2xl bg-white p-5 shadow-sm ring-1 ring-border">
+      <Photo person={person} sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 100vw" />
+      <div className="mt-5 flex flex-1 flex-col">
+        <RoleLabel>{person.role}</RoleLabel>
+        <h3 className="mt-2 font-display text-lg font-bold text-primary">{person.name}</h3>
+        <p className="mt-0.5 text-xs text-muted">{person.title}</p>
+        {person.component && (
+          <p className="mt-3 border-t border-border pt-3 text-sm leading-snug text-foreground/80">
+            {person.component}
+          </p>
+        )}
+        <div className="mt-auto pt-4">
+          <Contact person={person} />
+        </div>
       </div>
     </article>
   );
@@ -86,11 +116,10 @@ export default function Team() {
           eyebrow="Supervision"
           title="Our supervisors"
           description="The academic staff guiding this research."
-          align="center"
         />
-        <div className="mx-auto mt-12 grid max-w-3xl gap-6 sm:grid-cols-2">
+        <div className="mt-10 grid gap-6 lg:grid-cols-2">
           {supervisors.map((p) => (
-            <PersonCard key={p.name} person={p} size="lg" />
+            <SupervisorCard key={p.name} person={p} />
           ))}
         </div>
       </div>
@@ -100,11 +129,10 @@ export default function Team() {
           eyebrow="The team"
           title="Meet the researchers"
           description="Each member leads one component of the system."
-          align="center"
         />
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {members.map((p) => (
-            <PersonCard key={p.name} person={p} size="md" />
+            <MemberCard key={p.name} person={p} />
           ))}
         </div>
       </div>
