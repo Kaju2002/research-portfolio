@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import IntroSplash from "@/components/IntroSplash";
+import ScrollToTop from "@/components/ScrollToTop";
 import { project, site } from "@/data/research";
 import "./globals.css";
 
@@ -24,16 +26,23 @@ export const metadata: Metadata = {
   description: project.tagline,
 };
 
+// Runs before the intro is parsed, so a repeat visit in the same session never flashes it.
+const introScript = `try{if(sessionStorage.getItem("intro-seen")){document.documentElement.setAttribute("data-intro-seen","")}else{sessionStorage.setItem("intro-seen","1")}}catch(e){}`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
       className={`${inter.variable} ${poppins.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col font-sans">
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
+        <IntroSplash />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <ScrollToTop />
       </body>
     </html>
   );

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GraduationCap, Mail, MapPin } from "lucide-react";
+import { GraduationCap, Mail, MapPin, Phone } from "lucide-react";
 import { contact, navLinks, project, site } from "@/data/research";
 
 export default function Footer() {
@@ -54,6 +54,15 @@ export default function Footer() {
               >
                 <Mail className="h-4 w-4 shrink-0" />
                 {contact.email}
+              </a>
+            </li>
+            <li>
+              <a
+                href={`tel:${contact.phone.replace(/\s/g, "")}`}
+                className="flex items-center gap-2 text-white/60 transition-colors hover:text-white"
+              >
+                <Phone className="h-4 w-4 shrink-0" />
+                {contact.phone}
               </a>
             </li>
             <li className="flex items-start gap-2 text-white/60">
