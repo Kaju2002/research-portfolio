@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ImageIcon } from "lucide-react";
+import { ArrowUpRight, ImageIcon } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
 import { components, project } from "@/data/research";
 
@@ -11,7 +11,7 @@ function Label({ children }: { children: React.ReactNode }) {
 
 export default function Methodology() {
   return (
-    <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-28">
+    <section id="methodology" className="mx-auto max-w-7xl scroll-mt-32 px-5 py-20 sm:px-8 lg:py-28">
       <SectionHeading
         eyebrow="System overview"
         title="Overall system architecture"
@@ -20,14 +20,25 @@ export default function Methodology() {
 
       <div className="mt-10 overflow-hidden rounded-2xl bg-white p-4 shadow-sm ring-1 ring-border sm:p-6">
         {project.architectureDiagram ? (
-          <Image
-            src={project.architectureDiagram}
-            alt="Overall system architecture diagram"
-            width={983}
-            height={1024}
-            sizes="(min-width: 768px) 720px, 100vw"
-            className="mx-auto h-auto w-full max-w-180"
-          />
+          <a
+            href={project.architectureDiagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group block"
+          >
+            <Image
+              src={project.architectureDiagram}
+              alt="Overall system architecture diagram"
+              width={983}
+              height={1024}
+              sizes="(min-width: 768px) 720px, 100vw"
+              className="mx-auto h-auto w-full max-w-[min(72vh,45rem)]"
+            />
+            <span className="mt-4 flex items-center justify-center gap-1.5 text-sm font-medium text-primary group-hover:underline">
+              Open full size
+              <ArrowUpRight className="h-4 w-4" />
+            </span>
+          </a>
         ) : (
           <div className="grid aspect-[16/7] place-items-center rounded-2xl border-2 border-dashed border-primary/20 bg-primary-soft text-center">
             <div className="px-6">
@@ -51,8 +62,8 @@ export default function Methodology() {
         {components.map((c, i) => (
           <article
             key={c.id}
-            id={c.id}
-            className="grid scroll-mt-24 gap-10 rounded-2xl bg-white p-7 shadow-sm ring-1 ring-border transition duration-300 hover:shadow-lg hover:shadow-primary/5 sm:p-9 lg:grid-cols-[1.1fr_1fr] lg:gap-14"
+            id={`methodology-${c.id}`}
+            className="grid scroll-mt-32 gap-10 rounded-2xl bg-white p-7 shadow-sm ring-1 ring-border transition duration-300 hover:shadow-lg hover:shadow-primary/5 sm:p-9 lg:grid-cols-[1.1fr_1fr] lg:gap-14"
           >
             <div>
               <div className="flex items-center gap-4">

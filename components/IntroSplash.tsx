@@ -43,7 +43,7 @@ export default function IntroSplash() {
       </button>
 
       <div aria-hidden className="relative w-full max-w-4xl text-center">
-        <div className="intro-in inline-block rounded-lg bg-white px-3 py-2" style={delay(0.1)}>
+        <div className="intro-in inline-block rounded-lg bg-white px-3 py-2" style={delay(0.15)}>
           <Image
             src="/images/sliit-logo.jpg"
             alt=""
@@ -56,7 +56,7 @@ export default function IntroSplash() {
 
         <p
           className="intro-in mt-8 text-xs font-semibold uppercase tracking-[0.3em] text-white/50"
-          style={delay(0.35)}
+          style={delay(0.5)}
         >
           {site.groupId} · Research Project {site.year}
         </p>
@@ -64,7 +64,7 @@ export default function IntroSplash() {
         <p className="mt-5 font-display text-2xl font-bold leading-tight text-white sm:text-4xl">
           {titleLines.map((line, i) => (
             <span key={line} className="block overflow-hidden pb-1">
-              <span className="intro-line block" style={delay(0.55 + i * 0.15)}>
+              <span className="intro-line block" style={delay(0.8 + i * 0.22)}>
                 {line}
               </span>
             </span>
@@ -72,10 +72,10 @@ export default function IntroSplash() {
         </p>
 
         <div className="mx-auto mt-8 h-px w-48 bg-white/15">
-          <div className="intro-bar h-full bg-white" style={delay(0.4)} />
+          <div className="intro-bar h-full bg-white" style={delay(0.6)} />
         </div>
 
-        <p className="intro-in mt-5 text-sm text-white/50" style={delay(1.1)}>
+        <p className="intro-in mt-5 text-sm text-white/50" style={delay(1.6)}>
           {site.faculty} · {site.university}
         </p>
       </div>

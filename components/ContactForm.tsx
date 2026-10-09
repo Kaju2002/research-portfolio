@@ -1,20 +1,35 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Send } from "lucide-react";
+import { Loader2, Send } from "lucide-react";
+
+type Status = "idle" | "sending" | "sent" | "error";
 
 export default function ContactForm({ email }: { email: string }) {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    const subject = encodeURIComponent(String(data.get("subject") ?? ""));
-    const body = encodeURIComponent(
-      `${data.get("message") ?? ""}\n\nFrom: ${data.get("name") ?? ""} <${data.get("email") ?? ""}>`,
-    );
-    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-    setSent(true);
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    data.append("access_key", process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "");
+    data.append("from_name", "Research Portfolio · R26-SE-002");
+    data.set("subject", `[R26-SE-002] ${data.get("subject") ?? ""}`);
+
+    setStatus("sending");
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: data,
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.message);
+      form.reset();
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
   }
 
   const field =
@@ -59,19 +74,42 @@ export default function ContactForm({ email }: { email: string }) {
         </label>
       </div>
 
+      <input
+        type="checkbox"
+        name="botcheck"
+        className="hidden"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden
+      />
+
       <button
         type="submit"
-        className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-primary-dark sm:w-auto"
+        disabled={status === "sending"}
+        className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-wait disabled:opacity-70 sm:w-auto"
       >
-        <Send className="h-4 w-4" />
-        Send message
+        {status === "sending" ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Send className="h-4 w-4" />
+        )}
+        {status === "sending" ? "Sending..." : "Send message"}
       </button>
 
-      {sent && (
-        <p className="mt-4 text-sm text-success">
-          Your email app should open with the message ready to send.
-        </p>
-      )}
+      <p aria-live="polite" className="mt-4 text-sm">
+        {status === "sent" && (
+          <span className="text-success">Thank you! Your message has been sent.</span>
+        )}
+        {status === "error" && (
+          <span className="text-error">
+            Something went wrong. Please email us directly at{" "}
+            <a href={`mailto:${email}`} className="font-medium underline">
+              {email}
+            </a>
+            .
+          </span>
+        )}
+      </p>
     </form>
   );
 }

@@ -2,48 +2,50 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { MilestoneFact, MilestoneNext } from "@/components/MilestoneSummary";
 import SectionHeading from "@/components/SectionHeading";
-import { achievements, components, downloads, members, supervisors } from "@/data/research";
+import { components, contact, downloads, literature, members, supervisors } from "@/data/research";
 
-const subObjectiveCount = components.reduce((n, c) => n + c.subObjectives.length, 0);
+const studyCount = literature.reduce((n, l) => n + l.studies.length, 0);
 const technologyCount = new Set(components.flatMap((c) => c.methodology.technologies.flatMap((g) => g.items))).size;
-const availableDownloads = downloads.filter((d) => d.available).length;
+const documents = downloads.filter((d) => d.category === "Document");
+const presentations = downloads.filter((d) => d.category === "Presentation");
+const availableCount = (items: typeof downloads) => items.filter((d) => d.available).length;
 
 const entries: { href: string; title: string; fact: React.ReactNode; detail: React.ReactNode }[] = [
   {
-    href: "/research",
-    title: "Research Objectives",
-    fact: `${components.length} components · ${subObjectiveCount} sub-objectives`,
-    detail: "Research gap, problem, solution and the novelty of every component.",
+    href: "/domain",
+    title: "Domain",
+    fact: `${studyCount} studies reviewed · ${technologyCount} technologies`,
+    detail: "Literature survey, research gap, problem, objectives, methodology and technologies.",
   },
   {
-    href: "/methodology",
-    title: "Methodology",
-    fact: `${components.length} methodologies · ${technologyCount} technologies`,
-    detail: "System architecture and the approach behind each component.",
-  },
-  {
-    href: "/timeline",
+    href: "/milestones",
     title: "Milestones",
     fact: <MilestoneFact />,
     detail: <MilestoneNext />,
   },
   {
-    href: "/downloads",
-    title: "Downloads",
-    fact: `${availableDownloads} of ${downloads.length} available`,
-    detail: "Proposal, presentations, thesis report and research paper.",
+    href: "/documents",
+    title: "Documents",
+    fact: `${availableCount(documents)} of ${documents.length} available`,
+    detail: "TAF, proposals, thesis reports and the research paper.",
+  },
+  {
+    href: "/presentations",
+    title: "Presentations",
+    fact: `${availableCount(presentations)} of ${presentations.length} available`,
+    detail: "Slides from the proposal, progress and final presentations.",
   },
   {
     href: "/about",
     title: "About Us",
     fact: `${supervisors.length} supervisors · ${members.length} researchers`,
-    detail: "The supervisors and team behind the project.",
+    detail: "The supervisors, the team and our achievements.",
   },
   {
-    href: "/achievements",
-    title: "Achievements",
-    fact: achievements.length > 0 ? `${achievements.length} achievements` : "Coming soon",
-    detail: "Awards, publications and recognition for the research.",
+    href: "/contact",
+    title: "Contact Us",
+    fact: contact.email,
+    detail: "Send us a message, call us or find us at SLIIT Malabe.",
   },
 ];
 

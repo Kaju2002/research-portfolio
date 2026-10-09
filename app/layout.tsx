@@ -3,6 +3,7 @@ import { Inter, Poppins } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import IntroSplash from "@/components/IntroSplash";
+import ScrollToTop from "@/components/ScrollToTop";
 import { project, site } from "@/data/research";
 import "./globals.css";
 
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <ScrollToTop />
       </body>
     </html>
   );

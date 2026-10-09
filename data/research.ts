@@ -28,8 +28,21 @@ export type Milestone = {
   // Last day of the milestone (YYYY-MM-DD). The status is worked out from this date.
   end: string;
   description: string;
+  // Percentage of the final module mark, from the module outline.
+  marks?: number;
   // Only set this to override the date-based status, e.g. when a milestone is postponed.
   status?: MilestoneStatus;
+};
+
+export type Assessment = { name: string; weight: number; outcomes: string };
+
+export type Study = { authors: string; contribution: string; limitation: string };
+
+export type LiteratureReview = {
+  componentId: string;
+  overview: string;
+  studies: Study[];
+  gap: string;
 };
 
 export type ResolvedMilestone = Milestone & { status: MilestoneStatus };
@@ -75,13 +88,12 @@ export const site = {
 
 export const navLinks: NavLink[] = [
   { href: "/", label: "Home" },
-  { href: "/research", label: "Research" },
-  { href: "/methodology", label: "Methodology" },
-  { href: "/timeline", label: "Milestones" },
-  { href: "/downloads", label: "Downloads" },
+  { href: "/domain", label: "Domain" },
+  { href: "/milestones", label: "Milestones" },
+  { href: "/documents", label: "Documents" },
+  { href: "/presentations", label: "Presentations" },
   { href: "/about", label: "About Us" },
-  { href: "/achievements", label: "Achievements" },
-  { href: "/contact", label: "Contact" },
+  { href: "/contact", label: "Contact Us" },
 ];
 
 export const project = {
@@ -109,6 +121,14 @@ export const project = {
   ],
   // Put the image in public/images/diagrams/ and set e.g. "/images/diagrams/architecture.png"
   architectureDiagram: "/images/diagrams/architecture.jpg",
+};
+
+// Use the OneDrive "Share" link (view only), not the address copied from the browser bar.
+export const demo = {
+  url: "https://mysliit-my.sharepoint.com/my?id=%2Fpersonal%2Fit22224002%5Fmy%5Fsliit%5Flk%2FDocuments%2FResearch%20Demo",
+  description:
+    "Watch the complete system in action: demonstration videos of the mobile app and the web platform, together with the slides explaining the idea behind the system.",
+  contents: ["Mobile app demo video", "Web platform demo video", "System overview slides"],
 };
 
 export const scope = {
@@ -218,7 +238,7 @@ export const components: ResearchComponent[] = [
         { layer: "Data", items: ["Pandas", "RapidFuzz"] },
         { layer: "Model", items: ["Python", "Scikit-learn", "XGBoost"] },
         { layer: "Explainability", items: ["SHAP"] },
-        { layer: "App & infrastructure", items: ["FastAPI", "React Native", "MongoDB"] },
+        { layer: "App & infrastructure", items: ["FastAPI", "React Native", "MongoDB Atlas"] },
       ],
     },
   },
@@ -287,10 +307,166 @@ export const components: ResearchComponent[] = [
       ],
       technologies: [
         { layer: "Data", items: ["Pandas", "NumPy"] },
-        { layer: "Model", items: ["Python", "Scikit-learn", "NLP libraries"] },
-        { layer: "App & infrastructure", items: ["FastAPI", "MongoDB"] },
+        { layer: "Model", items: ["Python", "Scikit-learn"] },
+        { layer: "App & infrastructure", items: ["FastAPI", "MongoDB Atlas"] },
       ],
     },
+  },
+];
+
+// Summarised from the literature review of each member's proposal report.
+export const literature: LiteratureReview[] = [
+  {
+    componentId: "fake-job-post-detection",
+    overview:
+      "Earlier work treats fake job detection as an English-only, real-or-fake classification problem. Most studies use the EMSCAD dataset with machine learning or deep learning classifiers and report accuracy above 94%, but very few are deployed, and almost none explain their predictions or give users a graded risk level.",
+    studies: [
+      {
+        authors: "Dutta & Bandyopadhyay (2020)",
+        contribution: "Compared seven ML classifiers on EMSCAD; Random Forest reached 98.27% accuracy.",
+        limitation: "Little NLP beyond basic features and no handling of class imbalance.",
+      },
+      {
+        authors: "Pillai (2023)",
+        contribution: "Bidirectional LSTM with word embeddings, reaching 98.71% accuracy.",
+        limitation: "No interpretability and no risk levels for end users.",
+      },
+      {
+        authors: "Allam et al. (2025)",
+        contribution: "Tested six class-balancing strategies across four classifiers.",
+        limitation: "Research prototype only, with no user interface or explanations.",
+      },
+      {
+        authors: "Pangare et al. (2026)",
+        contribution: "JobScamShield: ML classification plus company checks through the GST registry and Glassdoor.",
+        limitation: "Works only in India and real-time API calls add latency.",
+      },
+      {
+        authors: "Singh et al. (2025)",
+        contribution: "Heuristic signals such as free email domains and scam keywords with Logistic Regression.",
+        limitation: "No deep semantic understanding from transformer models.",
+      },
+      {
+        authors: "Sathwika et al. (2024)",
+        contribution: "Django web app with several ML classifiers; Logistic Regression reached 98% accuracy.",
+        limitation: "English only, with no retraining pipeline or explanations for users.",
+      },
+    ],
+    gap: "All published fake job detection research covers English only and returns a binary verdict. No study combines transformer models with SHAP/LIME explanations in this domain, and no trilingual (English, Sinhala, Tamil) dataset exists from real Sri Lankan job portals.",
+  },
+  {
+    componentId: "employer-legitimacy-verification",
+    overview:
+      "Researchers have applied machine learning, NLP and data mining to detect fraudulent job postings. Most studies analyse the job advertisement itself (description, title, salary and posting attributes) with classifiers such as Random Forest, Logistic Regression and SVM, rather than the credibility of the employer behind it.",
+    studies: [
+      {
+        authors: "Vidros et al. (2017)",
+        contribution: "Introduced the public EMSCAD dataset and analysed the characteristics of fraudulent job posts.",
+        limitation: "Focuses on advert content, not the legitimacy of the employer behind the post.",
+      },
+      {
+        authors: "Alghamdi & Alharby (2019)",
+        contribution: "Intelligent ML model for recruitment fraud detection using job metadata and text.",
+        limitation: "Remains limited to job advertisement analysis.",
+      },
+      {
+        authors: "Dutta & Bandyopadhyay (2020)",
+        contribution: "ML classification of job text and metadata to identify fraud patterns.",
+        limitation: "Employer identity and company credibility are not considered.",
+      },
+      {
+        authors: "Allam et al. (2025)",
+        contribution: "Data balancing with ML classifiers improved fake job detection accuracy.",
+        limitation: "Uses advertisement data rather than employer credibility.",
+      },
+      {
+        authors: "Singh et al. (2025)",
+        contribution: "Showed the strong performance of Random Forest in detecting fake jobs.",
+        limitation: "Relies heavily on textual job features.",
+      },
+      {
+        authors: "Ansar & Hussain (2025)",
+        contribution: "Survey showing how job scams reduce trust in online job platforms.",
+        limitation: "Proposes no technical model for detecting fraudulent employers.",
+      },
+    ],
+    gap: "Employer credibility indicators such as company name and website domain consistency, recruiter email alignment and profile completeness are rarely analysed, and most systems give only a binary label without explaining why an employer is suspicious.",
+  },
+  {
+    componentId: "scam-communication-detection",
+    overview:
+      "Most research classifies job advertisements as fake or real, usually on the EMSCAD dataset. A second strand detects scam messages on SMS or WhatsApp with BERT-based models, and a third uses OCR to read scam text from screenshots. Behavioural studies have mapped the manipulation tactics scammers use, but these findings have not been built into an automated detector.",
+    studies: [
+      {
+        authors: "Alghamdi & Alharby (2019)",
+        contribution: "SVM and Random Forest on EMSCAD, reaching 97.41% accuracy on fake job ads.",
+        limitation: "Analyses only the advert text, not recruiter–candidate conversations.",
+      },
+      {
+        authors: "Taneja et al. (2025)",
+        contribution: "Fraud-BERT, a fine-tuned transformer reaching an F1 score of 0.93 on EMSCAD.",
+        limitation: "Limited to job posts; no protection once chats move to private channels.",
+      },
+      {
+        authors: "Jain et al. (2025)",
+        contribution: "BERT-based SMS smishing detection that outperformed keyword-based classifiers.",
+        limitation: "Single platform only, with a binary scam or legitimate label.",
+      },
+      {
+        authors: "Shinde et al. (2024)",
+        contribution: "OCR to extract scam text from screenshots without platform API access.",
+        limitation: "Traditional classifiers after OCR miss paraphrased scam expressions.",
+      },
+      {
+        authors: "Anagha et al. (2026)",
+        contribution: "Identified four job scam tactics: urgency, FOMO, sunk-cost influence and social proof.",
+        limitation: "Purely theoretical; never built into a real-time detection system.",
+      },
+      {
+        authors: "Tyszkiewicz & Noor (2025)",
+        contribution: "SafeChat: cumulative risk scores for conversation-level scam detection on SMS.",
+        limitation: "General scams on SMS only, without identifying the manipulation tactic.",
+      },
+    ],
+    gap: "No existing system analyses the recruiter–candidate conversation where money is actually lost, or identifies which manipulation tactic is being used, across multiple platforms and in a way non-technical job seekers can understand.",
+  },
+  {
+    componentId: "fraud-aware-job-recommendation",
+    overview:
+      "Job recommendation research matches job seekers to jobs by skills, experience and preferences, using collaborative, content-based and hybrid filtering. These approaches optimise relevance and accuracy but never check whether a job posting is safe, and existing risk- or trust-aware recommenders target other domains rather than recruitment fraud.",
+    studies: [
+      {
+        authors: "Zhang et al. (2014)",
+        contribution: "Job recommender using user-based and item-based collaborative filtering.",
+        limitation: "Cold-start problems and no check on whether postings are legitimate.",
+      },
+      {
+        authors: "Nadar et al.",
+        contribution: "Content-based recommender matching profiles to jobs with TF-IDF and cosine similarity.",
+        limitation: "Considers relevance only, not the safety of postings.",
+      },
+      {
+        authors: "Çano & Morisio (2017)",
+        contribution: "Reviewed hybrid recommenders that tackle sparsity and cold start.",
+        limitation: "Focused on accuracy and ignores fraudulent job postings.",
+      },
+      {
+        authors: "Bouneffouf (2013)",
+        contribution: "DRARS, a risk-aware recommender using a contextual bandit for situational risk.",
+        limitation: "General recommendation risk only, not fraud on job platforms.",
+      },
+      {
+        authors: "Masrom et al. (2018)",
+        contribution: "Trust-aware recommender using trust relationships between users.",
+        limitation: "Covers trust between users, not fraudulent postings or employers.",
+      },
+      {
+        authors: "Madanchian & Taherdoost (2020)",
+        contribution: "Described TOPSIS for ranking options by distance from ideal solutions.",
+        limitation: "General decision-making; not designed to include fraud risk.",
+      },
+    ],
+    gap: "No existing system brings skill matching and multiple fraud signals (fake job, employer legitimacy and scam communication) together with a ranking method, so jobs are never ranked by both relevance and safety.",
   },
 ];
 
@@ -311,50 +487,72 @@ export const milestones: Milestone[] = [
     title: "Proposal Submission",
     date: "15 March 2026",
     end: "2026-03-15",
-    description: "Submission of the project proposal document.",
+    description:
+      "Submission of the project proposal document. The report is marked together with the proposal presentation.",
   },
   {
     title: "Proposal Presentation",
     date: "16 – 18 March 2026",
     end: "2026-03-18",
-    description: "Presentation of the proposed research to the panel.",
+    description:
+      "Presentation of the proposed research to the panel. Marked together with the proposal report.",
+    marks: 12,
   },
   {
     title: "Progress Presentation 1",
     date: "11 – 13 May 2026",
     end: "2026-05-13",
     description: "Demonstration of around 50% completion of the system.",
+    marks: 15,
   },
   {
     title: "Progress Presentation 2",
     date: "31 August – 2 September 2026",
     end: "2026-09-02",
     description: "Demonstration of around 90% completion of the system.",
+    marks: 18,
   },
   {
     title: "Draft Thesis & Website Submission",
     date: "11 October 2026",
     end: "2026-10-11",
-    description: "Submission of the draft thesis and research portfolio website.",
+    description:
+      "Submission of the draft thesis and the research website. The marks shown are for the website.",
+    marks: 2,
   },
   {
     title: "Final Presentation & Viva",
     date: "19 – 21 October 2026",
     end: "2026-10-21",
     description: "Final system demonstration, viva and website evaluation.",
+    marks: 20,
   },
   {
     title: "Research Paper Submission",
     date: "23 October 2026",
     end: "2026-10-23",
     description: "Submission of the research paper for publication.",
+    marks: 10,
   },
   {
     title: "Final Thesis Submission",
     date: "28 October 2026",
     end: "2026-10-28",
     description: "Submission of the final individual and group thesis reports.",
+    marks: 19,
   },
+];
+
+// Continuous assessment breakdown from the module outline. Weights add up to 100.
+export const assessments: Assessment[] = [
+  { name: "Proposal Presentation & Report", weight: 12, outcomes: "LO1 – LO5" },
+  { name: "Progress Presentation I", weight: 15, outcomes: "LO1 – LO5" },
+  { name: "Progress Presentation II", weight: 18, outcomes: "LO1 – LO5" },
+  { name: "Final Presentation and Viva", weight: 20, outcomes: "LO1 – LO5" },
+  { name: "Final Report", weight: 19, outcomes: "LO1 – LO5" },
+  { name: "Research Paper (published)", weight: 10, outcomes: "LO1 – LO4" },
+  { name: "Website", weight: 2, outcomes: "LO4" },
+  { name: "Research Logbook, Status Documents 1 & 2", weight: 4, outcomes: "LO4" },
 ];
 
 // `today` is a YYYY-MM-DD string, so plain string comparison orders dates correctly.
@@ -370,24 +568,38 @@ export function resolveMilestones(today: string): ResolvedMilestone[] {
 
 export const downloads: DownloadItem[] = [
   {
+    title: "Topic Assessment Form",
+    description: "The approved Topic Assessment Form (TAF) for the research topic, submitted in January 2026.",
+    category: "Document",
+    file: "/documents/taf.pdf",
+    available: true,
+  },
+  {
+    title: "Project Charter",
+    description: "The project charter defining the scope, team roles and plan of the research project.",
+    category: "Document",
+    file: "",
+    available: false,
+  },
+  {
     title: "Project Proposal",
     description: "The individual proposal report for each of the four components, submitted in March 2026.",
     category: "Document",
     file: "",
     available: true,
     files: [
-      { label: "Santhosh S · IT22113740", file: "/documents/proposal-IT22113740-santhosh.docx" },
+      { label: "Santhosh S · IT22113740", file: "/documents/proposal-IT22113740-santhosh.pdf" },
       { label: "Bandara H.M.N.T · IT22251664", file: "/documents/proposal-IT22251664-bandara.pdf" },
       { label: "Kajanthan U · IT22224002", file: "/documents/proposal-IT22224002-kajanthan.pdf" },
       { label: "Methmi N P C S · IT22188618", file: "/documents/proposal-IT22188618-methmi.pdf" },
     ],
   },
   {
-    title: "Topic Assessment Form",
-    description: "The approved Topic Assessment Form (TAF) for the research topic, submitted in January 2026.",
+    title: "Check List Documents",
+    description: "The check list documents submitted throughout the project.",
     category: "Document",
-    file: "/documents/taf.pdf",
-    available: true,
+    file: "",
+    available: false,
   },
   {
     title: "Proposal Presentation",
@@ -418,10 +630,17 @@ export const downloads: DownloadItem[] = [
     available: false,
   },
   {
-    title: "Thesis Report",
-    description: "The final thesis report.",
+    title: "Final Report – Individual",
+    description: "The individual final report for each of the four components.",
     category: "Document",
-    file: "/documents/thesis-report.pdf",
+    file: "",
+    available: false,
+  },
+  {
+    title: "Final Report – Group",
+    description: "The main final report covering the complete system.",
+    category: "Document",
+    file: "",
     available: false,
   },
   {
@@ -440,7 +659,7 @@ export const supervisors: Person[] = [
     title: "Lecturer",
     department: "Department of Software Engineering, Faculty of Computing",
     email: "karthiga.r@sliit.lk",
-    linkedin: "",
+    linkedin: "https://www.linkedin.com/in/karthiga-rajendran-6492b3171/",
     image: "/images/team/karthiga-rajendran.jpg",
     interests: ["Machine learning & AI", "Software engineering", "ICT for development", "e-Learning", "HCI"],
   },
@@ -450,7 +669,7 @@ export const supervisors: Person[] = [
     title: "Senior Lecturer",
     department: "Department of Software Engineering, Faculty of Computing",
     email: "thilini.j@sliit.lk",
-    linkedin: "",
+    linkedin: "https://www.linkedin.com/in/thilini-jayalath-2815b4b0/",
     image: "/images/team/thilini-jayalath.jpg",
     interests: ["Software complexity metrics", "Machine learning", "ICT for development", "e-Learning", "HCI"],
   },
@@ -464,12 +683,19 @@ const memberPhotos: Record<string, string> = {
   IT22188618: "/images/team/IT22188618.jpg",
 };
 
+const memberLinkedIn: Record<string, string> = {
+  IT22113740: "https://www.linkedin.com/in/sirithar-santhosh-566375255/",
+  IT22251664: "https://www.linkedin.com/in/nipuni-bandara-a84588277/",
+  IT22224002: "https://www.linkedin.com/in/kajanthu7/",
+  IT22188618: "https://www.linkedin.com/in/chethya-methmi/",
+};
+
 export const members: Person[] = components.map((c) => ({
   name: c.owner,
   role: c.ownerId === site.leaderId ? "Group Leader" : "Team Member",
   title: `${c.ownerId} · BSc (Hons) IT, Software Engineering`,
   email: `${c.ownerId.toLowerCase()}@my.sliit.lk`,
-  linkedin: "",
+  linkedin: memberLinkedIn[c.ownerId],
   image: memberPhotos[c.ownerId],
   component: c.title,
 }));
@@ -478,7 +704,7 @@ export const achievements: Achievement[] = [];
 
 export const contact = {
   email: "kajanthan2k1@gmail.com",
-  phone: "",
+  phone: "+94 76 453 9863",
   address: "SLIIT, New Kandy Road, Malabe, Sri Lanka",
   mapQuery: "Sri Lanka Institute of Information Technology, Malabe",
 };

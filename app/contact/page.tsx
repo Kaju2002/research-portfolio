@@ -13,6 +13,7 @@ const mapQuery = encodeURIComponent(contact.mapQuery);
 export default function ContactPage() {
   const details: { label: string; value: string; href?: string }[] = [
     { label: "Email", value: contact.email, href: `mailto:${contact.email}` },
+    { label: "Phone", value: contact.phone, href: `tel:${contact.phone.replace(/\s/g, "")}` },
     { label: "Institution", value: `${site.faculty}, ${site.university}` },
     { label: "Address", value: contact.address },
   ];

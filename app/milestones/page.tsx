@@ -6,13 +6,13 @@ export const metadata: Metadata = {
   title: "Milestones",
 };
 
-export default function TimelinePage() {
+export default function MilestonesPage() {
   return (
     <>
       <PageHeader
         eyebrow="Milestones"
-        title="Project timeline"
-        description="Key milestones of the research project, from initialization to final submission."
+        title="Project timeline & assessments"
+        description="Every milestone and assessment of the research project, with dates and the marks allocated to each."
       />
       <Timeline />
     </>

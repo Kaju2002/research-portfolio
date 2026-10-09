@@ -9,7 +9,7 @@ function Label({ children }: { children: React.ReactNode }) {
 
 export default function Objectives() {
   return (
-    <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-28">
+    <section id="objectives" className="mx-auto max-w-7xl scroll-mt-32 px-5 py-20 sm:px-8 lg:py-28">
       <SectionHeading
         eyebrow="Research objectives"
         title="Objectives by component"
@@ -33,7 +33,7 @@ export default function Objectives() {
           <article
             key={c.id}
             id={c.id}
-            className="flex scroll-mt-24 flex-col rounded-2xl bg-white p-7 shadow-sm ring-1 ring-border transition duration-300 hover:shadow-lg hover:shadow-primary/5 sm:p-8"
+            className="flex scroll-mt-32 flex-col rounded-2xl bg-white p-7 shadow-sm ring-1 ring-border transition duration-300 hover:shadow-lg hover:shadow-primary/5 sm:p-8"
           >
             <div className="flex items-center gap-4">
               <span className="font-display text-sm font-bold tabular-nums text-accent">

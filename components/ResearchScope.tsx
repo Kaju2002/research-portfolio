@@ -41,7 +41,7 @@ function Point({ text, highlight }: { text: string; highlight: boolean }) {
 
 export default function ResearchScope({ showHeading = true }: { showHeading?: boolean }) {
   return (
-    <section className="bg-primary-soft">
+    <section id="scope" className="scroll-mt-32 bg-primary-soft">
       <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-28">
         {showHeading && (
           <SectionHeading

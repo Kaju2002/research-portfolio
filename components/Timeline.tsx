@@ -1,7 +1,10 @@
 "use client";
 
-import type { MilestoneStatus } from "@/data/research";
+import { assessments, type MilestoneStatus } from "@/data/research";
 import { useMilestones } from "@/lib/useMilestones";
+
+const maxWeight = Math.max(...assessments.map((a) => a.weight));
+const totalWeight = assessments.reduce((sum, a) => sum + a.weight, 0);
 
 const statusStyles: Record<
   MilestoneStatus,
@@ -116,9 +119,14 @@ export default function Timeline() {
                       · {m.date}
                     </span>
                   </p>
-                  <h3 className={`mt-1.5 font-display text-lg font-bold ${s.title}`}>
-                    {m.title}
-                  </h3>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                    <h3 className={`font-display text-lg font-bold ${s.title}`}>{m.title}</h3>
+                    {m.marks !== undefined && (
+                      <span className="rounded-md border border-primary/15 bg-white px-2 py-0.5 text-xs font-semibold tabular-nums text-primary">
+                        {m.marks}% of final mark
+                      </span>
+                    )}
+                  </div>
                   <p className="mt-1 text-sm leading-relaxed text-muted">{m.description}</p>
                 </div>
               </div>
@@ -126,6 +134,56 @@ export default function Timeline() {
           );
         })}
       </ol>
+
+      <div className="mt-24">
+        <div className="flex items-center gap-4">
+          <h2 className="font-display text-2xl font-bold text-primary">Assessment marks</h2>
+          <span className="h-px flex-1 bg-border" />
+        </div>
+        <p className="mt-2 text-sm text-muted">
+          How the final module mark is divided across the continuous assessments.
+        </p>
+
+        <div className="mt-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-border">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-primary-soft text-xs uppercase tracking-[0.12em] text-primary/70">
+              <tr>
+                <th className="px-5 py-3 font-semibold sm:px-7">Assessment</th>
+                <th className="hidden px-5 py-3 font-semibold sm:table-cell">Learning outcomes</th>
+                <th className="px-5 py-3 text-right font-semibold sm:px-7">Weight</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {assessments.map((a) => (
+                <tr key={a.name}>
+                  <td className="px-5 py-3.5 sm:px-7">
+                    <p className="font-medium text-foreground">{a.name}</p>
+                    <div className="mt-2 h-1 max-w-xs rounded-full bg-primary-light">
+                      <div
+                        className="h-full rounded-full bg-primary"
+                        style={{ width: `${(a.weight / maxWeight) * 100}%` }}
+                      />
+                    </div>
+                  </td>
+                  <td className="hidden px-5 py-3.5 text-muted sm:table-cell">{a.outcomes}</td>
+                  <td className="px-5 py-3.5 text-right font-display font-bold tabular-nums text-primary sm:px-7">
+                    {a.weight}%
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot className="border-t-2 border-primary/15 bg-primary-soft">
+              <tr>
+                <td className="px-5 py-3.5 font-semibold text-primary sm:px-7">Total</td>
+                <td className="hidden sm:table-cell" />
+                <td className="px-5 py-3.5 text-right font-display font-bold tabular-nums text-primary sm:px-7">
+                  {totalWeight}%
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
     </section>
   );
 }
