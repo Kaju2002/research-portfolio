@@ -1,28 +1,63 @@
 import { ArrowDown, ArrowUpRight } from "lucide-react";
-import { downloads, type DownloadItem } from "@/data/research";
+import { downloads, type DownloadFile, type DownloadItem } from "@/data/research";
+
+function isExternal(file: string) {
+  return /^https?:\/\//i.test(file);
+}
 
 function fileType(file: string) {
   return file.split(".").pop()?.toUpperCase() ?? "";
 }
 
-// PDFs open in the browser's viewer; other formats can't be previewed, so they download.
+function linkKind(file: string) {
+  if (!file) return "";
+  if (!isExternal(file)) return fileType(file);
+  const host = new URL(file).hostname;
+  if (host.includes("github")) return "GitHub";
+  if (host.includes("figma")) return "Figma";
+  if (host.includes("sharepoint")) return "SharePoint";
+  return "Link";
+}
+
+// PDFs and external pages open in a new tab. Other local formats download.
 function linkProps(file: string) {
-  return fileType(file) === "PDF"
+  return isExternal(file) || fileType(file) === "PDF"
     ? { href: file, target: "_blank", rel: "noopener noreferrer" }
     : { href: file, download: true };
 }
 
 function LinkIcon({ file }: { file: string }) {
-  const Icon = fileType(file) === "PDF" ? ArrowUpRight : ArrowDown;
+  const Icon = isExternal(file) || fileType(file) === "PDF" ? ArrowUpRight : ArrowDown;
   return <Icon className="h-4 w-4 shrink-0" />;
+}
+
+function FileLink({ file }: { file: DownloadFile }) {
+  if (!file.file) {
+    return <p className="py-3 text-sm font-medium text-foreground/80">{file.label}</p>;
+  }
+
+  return (
+    <a
+      {...linkProps(file.file)}
+      className="group flex items-center justify-between gap-3 py-3 text-sm font-medium text-foreground/80 transition hover:text-primary"
+    >
+      <span>{file.label}</span>
+      <span className="flex shrink-0 items-center gap-2 text-xs font-semibold text-muted group-hover:text-primary">
+        {linkKind(file.file)}
+        <LinkIcon file={file.file} />
+      </span>
+    </a>
+  );
 }
 
 export default function Downloads({
   category,
   intro,
+  columns = 4,
 }: {
   category: DownloadItem["category"];
   intro?: React.ReactNode;
+  columns?: 3 | 4;
 }) {
   const items = downloads.filter((d) => d.category === category);
   const available = items.filter((d) => d.available).length;
@@ -38,13 +73,18 @@ export default function Downloads({
         <span className="h-px flex-1 bg-border" />
       </div>
 
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className={`mt-6 grid gap-5 sm:grid-cols-2 ${columns === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"}`}>
         {items.map((d, i) => {
-          const types = [...new Set((d.files ?? [d]).map((f) => fileType(f.file)))];
+          const links = [
+            ...(d.files ?? []),
+            ...(d.groups?.flatMap((g) => g.files ?? []) ?? []),
+          ];
+          const listed = links.length ? links : [d];
+          const types = [...new Set(listed.map((f) => linkKind(f.file)).filter(Boolean))];
           return (
             <article
               key={d.title}
-              className={`flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-border transition duration-300 hover:shadow-lg hover:shadow-primary/5 ${d.files ? "sm:col-span-2" : ""}`}
+              className={`flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-border transition duration-300 hover:shadow-lg hover:shadow-primary/5 ${d.groups ? (columns === 3 ? "sm:col-span-2 lg:col-span-3" : "sm:col-span-2 lg:col-span-4") : d.files && columns === 4 ? "sm:col-span-2" : ""}`}
             >
               <div className="flex items-center gap-3">
                 <span className="font-display text-sm font-bold tabular-nums text-accent">
@@ -66,20 +106,44 @@ export default function Downloads({
                   <p className="border-t border-border pt-4 text-sm font-medium text-foreground/40">
                     Coming soon
                   </p>
+                ) : d.groups ? (
+                  <div className="border-t border-border pt-5">
+                    {d.files && (
+                      <ul className="mb-6 divide-y divide-border">
+                        {d.files.map((f) => (
+                          <li key={f.file}>
+                            <FileLink file={f} />
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  <div className="grid gap-6 sm:grid-cols-3">
+                    {d.groups.map((g) => (
+                      <div key={g.title}>
+                        <p className="text-sm font-semibold text-primary">{g.title}</p>
+                        {g.note && (
+                          <p className={`text-sm ${g.files?.length ? "mt-1 text-muted" : "mt-2 font-medium text-foreground/40"}`}>
+                            {g.note}
+                          </p>
+                        )}
+                        {g.files?.length ? (
+                          <ul className="mt-1 divide-y divide-border">
+                            {g.files.map((f) => (
+                              <li key={f.label}>
+                                <FileLink file={f} />
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                  </div>
                 ) : d.files ? (
                   <ul className="divide-y divide-border border-t border-border">
                     {d.files.map((f) => (
                       <li key={f.file}>
-                        <a
-                          {...linkProps(f.file)}
-                          className="group flex items-center justify-between gap-3 py-3 text-sm font-medium text-foreground/80 transition hover:text-primary"
-                        >
-                          <span>{f.label}</span>
-                          <span className="flex items-center gap-2 text-xs font-semibold text-muted group-hover:text-primary">
-                            {fileType(f.file)}
-                            <LinkIcon file={f.file} />
-                          </span>
-                        </a>
+                        <FileLink file={f} />
                       </li>
                     ))}
                   </ul>

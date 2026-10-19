@@ -47,6 +47,14 @@ export type LiteratureReview = {
 
 export type ResolvedMilestone = Milestone & { status: MilestoneStatus };
 
+export type DownloadFile = { label: string; file: string };
+
+export type DownloadGroup = {
+  title: string;
+  note?: string;
+  files?: DownloadFile[];
+};
+
 export type DownloadItem = {
   title: string;
   description: string;
@@ -54,7 +62,9 @@ export type DownloadItem = {
   file: string;
   available: boolean;
   // Use instead of `file` when the item has one file per member, e.g. individual proposals.
-  files?: { label: string; file: string }[];
+  files?: DownloadFile[];
+  // Use when one document groups several submissions, e.g. the check lists.
+  groups?: DownloadGroup[];
 };
 
 export type Person = {
@@ -581,13 +591,6 @@ export const downloads: DownloadItem[] = [
     available: true,
   },
   {
-    title: "Project Charter",
-    description: "The project charter defining the scope, team roles and plan of the research project.",
-    category: "Document",
-    file: "",
-    available: false,
-  },
-  {
     title: "Project Proposal",
     description: "The individual proposal report for each of the four components, submitted in March 2026.",
     category: "Document",
@@ -602,10 +605,48 @@ export const downloads: DownloadItem[] = [
   },
   {
     title: "Check List Documents",
-    description: "The check list documents submitted throughout the project.",
+    description:
+      "Checklist 1 is the Git repository. Checklist 2 covers the application builds and the interface design. Checklist 3 is the deployment report.",
     category: "Document",
     file: "",
-    available: false,
+    available: true,
+    groups: [
+      {
+        title: "Checklist 1",
+        files: [{ label: "Git repository", file: "https://github.com/Kaju2002/R26-SE-002" }],
+      },
+      {
+        title: "Checklist 2",
+        files: [
+          {
+            label: "Mobile Application, Admin Dashboard and Recruiter Dashboard",
+            file: "https://mysliit-my.sharepoint.com/:f:/g/personal/it22224002_my_sliit_lk/IgC2tPyOpeKhRK-kuOmmMf2lAdy0nUs3vrf1XMdWC1qp9tA?e=VnLvb5",
+          },
+          {
+            label: "Figma design",
+            file: "https://www.figma.com/design/K7kjwT7pKDBj1X6pDpiW9u/Untitled?node-id=0-1&p=f&t=8nra7eJuVezialY2-0",
+          },
+        ],
+      },
+      {
+        title: "Checklist 3",
+        files: [{ label: "Deployment report", file: "/documents/deployment-report.pdf" }],
+      },
+    ],
+  },
+  {
+    title: "Draft Thesis",
+    description: "The individual and group draft thesis reports.",
+    category: "Document",
+    file: "",
+    available: true,
+    files: [
+      { label: "Santhosh S · IT22113740", file: "/documents/draft-IT22113740-santhosh.pdf" },
+      { label: "Bandara H.M.N.T · IT22251664", file: "/documents/draft-IT22251664-bandara.pdf" },
+      { label: "Kajanthan U · IT22224002", file: "/documents/draft-IT22224002-kajanthan.pdf" },
+      { label: "Methmi N P C S · IT22188618", file: "/documents/draft-IT22188618-methmi.pdf" },
+      { label: "Group report · R26-SE-002", file: "/documents/draft-R26-SE-002-group.pdf" },
+    ],
   },
   {
     title: "Proposal Presentation",
@@ -625,8 +666,8 @@ export const downloads: DownloadItem[] = [
     title: "Progress Presentation 2",
     description: "Slides from the second progress presentation.",
     category: "Presentation",
-    file: "/documents/pp2-presentation.pdf",
-    available: false,
+    file: "/documents/pp2-presentation.pptx",
+    available: true,
   },
   {
     title: "Final Presentation",
@@ -654,7 +695,7 @@ export const downloads: DownloadItem[] = [
     description: "The research paper submitted for publication.",
     category: "Document",
     file: "/documents/research-paper.pdf",
-    available: false,
+    available: true,
   },
 ];
 
