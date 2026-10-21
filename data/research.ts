@@ -134,6 +134,11 @@ export const project = {
   architectureDiagram: "/images/diagrams/architecture.jpg",
 };
 
+export const repository = {
+  url: "https://github.com/Kaju2002",
+  label: "GitHub",
+};
+
 // Use the OneDrive "Share" link (view only), not the address copied from the browser bar.
 export const demo = {
   url: "https://mysliit-my.sharepoint.com/my?id=%2Fpersonal%2Fit22224002%5Fmy%5Fsliit%5Flk%2FDocuments%2FResearch%20Demo",
