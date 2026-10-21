@@ -81,6 +81,16 @@ function SupervisorCard({ person }: { person: Person }) {
 
         <div className="mt-auto pt-5">
           <Contact person={person} />
+          {person.letter && (
+            <a
+              href={person.letter}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
+            >
+              Letter of validation
+            </a>
+          )}
         </div>
       </div>
     </article>
