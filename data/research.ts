@@ -74,6 +74,7 @@ export type Person = {
   email: string;
   linkedin?: string;
   image?: string;
+  letter?: string;
   component?: string;
   department?: string;
   interests?: string[];
@@ -697,6 +698,14 @@ export const downloads: DownloadItem[] = [
     file: "/documents/research-paper.pdf",
     available: true,
   },
+  {
+    title: "Letter of Validation",
+    description:
+      "The external supervisor's letter of validation for the research project, issued by Mr. Saman Gunawardana.",
+    category: "Document",
+    file: "/documents/validation-letter.pdf",
+    available: true,
+  },
 ];
 
 export const supervisors: Person[] = [
@@ -719,6 +728,15 @@ export const supervisors: Person[] = [
     linkedin: "https://www.linkedin.com/in/thilini-jayalath-2815b4b0/",
     image: "/images/team/thilini-jayalath.jpg",
     interests: ["Software complexity metrics", "Machine learning", "ICT for development", "e-Learning", "HCI"],
+  },
+  {
+    name: "Mr. Saman Gunawardana",
+    role: "External Supervisor",
+    title: "Lecturer-in-Charge, Industry Placement",
+    department: "Sri Lanka Institute of Information Technology",
+    email: "saman.g@sliit.lk",
+    image: "/images/team/saman-gunawardana.jpg",
+    letter: "/documents/validation-letter.pdf",
   },
 ];
 
