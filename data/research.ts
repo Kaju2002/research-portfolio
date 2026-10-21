@@ -674,8 +674,8 @@ export const downloads: DownloadItem[] = [
     title: "Final Presentation",
     description: "Slides from the final presentation and viva.",
     category: "Presentation",
-    file: "/documents/final-presentation.pdf",
-    available: false,
+    file: "/documents/final-presentation.pptx",
+    available: true,
   },
   {
     title: "Final Report – Individual",
